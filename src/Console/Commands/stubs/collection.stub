@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }} as Model;
+use Illuminate\Database\Eloquent\Collection;
+
+/**
+ * @method Model find($key, $default = null)
+ * @method Model first(callable $callback = null, $default = null)
+ * @method Model last(callable $callback = null, $default = null)
+ * @method Model firstOrFail($key = null, $operator = null, $value = null)
+ * @method Model firstWhere($key, $operator = null, $value = null)
+ * @method Model sole($key = null, $operator = null, $value = null)
+ */
+class {{ class }} extends Collection
+{
+    //
+}

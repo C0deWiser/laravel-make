@@ -1,0 +1,34 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }} as Model;
+use Closure;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+
+/**
+ * @method Model getModel()
+ * @method Model make(array $attributes = [])
+ * @method Model create(array $attributes = [])
+ * @method Model forceCreate(array $attributes)
+ * @method Model sole($columns = ['*'])
+ * @method Model find($id, $columns = ['*'])
+ * @method Model findOr($id, $columns = ['*'], Closure $callback = null)
+ * @method Model findOrNew($id, $columns = ['*'])
+ * @method Model findOrFail($id, $columns = ['*'])
+ * @method Model first($columns = ['*'])
+ * @method Model firstOr($columns = ['*'], Closure $callback = null)
+ * @method Model firstOrNew(array $attributes = [], array $values = [])
+ * @method Model firstOrFail($columns = ['*'])
+ * @method Model firstOrCreate(array $attributes = [], array $values = [])
+ * @method Model firstWhere($column, $operator = null, $value = null, $boolean = 'and')
+ * @method Model updateOrCreate(array $attributes, array $values = [])
+ *
+ * @method Collection|Model[] findMany($ids, $columns = ['*'])
+ * @method Collection|Model[] get($columns = ['*'])
+ */
+class {{ class }} extends Builder
+{
+    //
+}

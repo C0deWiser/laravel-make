@@ -1,0 +1,28 @@
+{
+    "name": "codewiser/laravel-make",
+    "description": "Provide Laravel make:builder and make:collection commands",
+    "keywords": ["Laravel", "artisan", "console", "make", "builder", "collection"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "pm",
+            "email": "pm@101media.ru"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "laravel/framework": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Codewiser\\Make\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Codewiser\\Make\\MakeServiceProvider"
+            ]
+        }
+    }
+}
