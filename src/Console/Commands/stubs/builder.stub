@@ -2,10 +2,10 @@
 
 namespace {{ namespace }};
 
-use {{ namespacedModel }} as Model;
 use Closure;
+use {{ namespacedModel }} as Model;
+use {{ namespacedCollection }} as Collection;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @method Model getModel()
@@ -25,8 +25,8 @@ use Illuminate\Database\Eloquent\Collection;
  * @method Model firstWhere($column, $operator = null, $value = null, $boolean = 'and')
  * @method Model updateOrCreate(array $attributes, array $values = [])
  *
- * @method Collection|Model[] findMany($ids, $columns = ['*'])
- * @method Collection|Model[] get($columns = ['*'])
+ * @method Collection findMany($ids, $columns = ['*'])
+ * @method Collection get($columns = ['*'])
  */
 class {{ class }} extends Builder
 {

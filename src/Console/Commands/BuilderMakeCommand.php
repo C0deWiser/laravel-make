@@ -39,7 +39,7 @@ class BuilderMakeCommand extends GeneratorCommand
     /**
      * Resolve the fully-qualified path to the stub.
      *
-     * @param string $stub
+     * @param  string  $stub
      *
      * @return string
      */
@@ -47,25 +47,25 @@ class BuilderMakeCommand extends GeneratorCommand
     {
         return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
-            : __DIR__ . $stub;
+            : __DIR__.$stub;
     }
 
     /**
      * Get the default namespace for the class.
      *
-     * @param string $rootNamespace
+     * @param  string  $rootNamespace
      *
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . '\Builders';
+        return $rootNamespace.'\Builders';
     }
 
     /**
      * Build the class with the given name.
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return string
      * @throws FileNotFoundException
@@ -80,13 +80,17 @@ class BuilderMakeCommand extends GeneratorCommand
             ? $this->qualifyModel($this->option('model'))
             : $this->qualifyModel($this->guessModelName($name));
 
-        return $model ? $this->replaceModel($stub, $model) : $stub;
+        $collection = $this->option('model')
+            ? $this->qualifyCollection($this->option('model'))
+            : $this->qualifyCollection($this->guessCollectionName($name));
+
+        return $model ? $this->replaceModel($stub, $model, $collection) : $stub;
     }
 
     /**
      * Guess the model name from the Factory name or return a default model name.
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return string
      */
@@ -103,16 +107,64 @@ class BuilderMakeCommand extends GeneratorCommand
         }
 
         if (is_dir(app_path('Models/'))) {
-            return $this->rootNamespace() . 'Models\Model';
+            return $this->rootNamespace().'Models\Model';
         }
 
-        return $this->rootNamespace() . 'Model';
+        return $this->rootNamespace().'Model';
+    }
+
+    /**
+     * Guess the model collection name from the Factory name or return a default collection name.
+     *
+     * @param  string  $name
+     *
+     * @return string
+     */
+    protected function guessCollectionName(string $name): string
+    {
+        if (str_ends_with($name, 'Builder')) {
+            $name = str($name)->substr(0, -7)->afterLast('\\');
+        }
+
+        $name = $name.'Collection';
+
+        $collectionName = $this->qualifyCollection(str($name)->after($this->rootNamespace()));
+
+        if (class_exists($collectionName)) {
+            return $collectionName;
+        }
+
+        return 'Illuminate\Database\Eloquent\Collection';
+    }
+
+    /**
+     * Qualify the given collection class base name.
+     *
+     * @param  string  $collection
+     *
+     * @return string
+     */
+    protected function qualifyCollection(string $collection)
+    {
+        $collection = ltrim($collection, '\\/');
+
+        $collection = str_replace('/', '\\', $collection);
+
+        $rootNamespace = $this->rootNamespace();
+
+        if (Str::startsWith($collection, $rootNamespace)) {
+            return $collection;
+        }
+
+        return is_dir(app_path('Collections'))
+            ? $rootNamespace.'Collections\\'.$collection
+            : $rootNamespace.$collection;
     }
 
     /**
      * Replace the User model namespace.
      *
-     * @param string $stub
+     * @param  string  $stub
      *
      * @return string
      */
@@ -125,7 +177,7 @@ class BuilderMakeCommand extends GeneratorCommand
         }
 
         return str_replace(
-            $this->rootNamespace() . 'User',
+            $this->rootNamespace().'User',
             $model,
             $stub
         );
@@ -134,14 +186,15 @@ class BuilderMakeCommand extends GeneratorCommand
     /**
      * Replace the model for the given stub.
      *
-     * @param string $stub
-     * @param string $model
+     * @param  string  $stub
+     * @param  string  $model
      *
      * @return string
      */
-    protected function replaceModel(string $stub, string $model): string
+    protected function replaceModel(string $stub, string $model, string $collection): string
     {
         $model = str_replace('/', '\\', $model);
+        $collection = str_replace('/', '\\', $collection);
 
         if (str_starts_with($model, '\\')) {
             $namespacedModel = trim($model, '\\');
@@ -149,26 +202,35 @@ class BuilderMakeCommand extends GeneratorCommand
             $namespacedModel = $this->qualifyModel($model);
         }
 
+        if (str_starts_with($collection, '\\')) {
+            $namespacedCollection = trim($collection, '\\');
+        } else {
+            $namespacedCollection = $this->qualifyCollection($collection);
+        }
+
         $model = class_basename(trim($model, '\\'));
+        $collection = class_basename(trim($collection, '\\'));
 
         $dummyUser = class_basename($this->userProviderModel());
 
         $dummyModel = Str::camel($model) === 'user' ? 'model' : $model;
 
         $replace = [
-            'NamespacedDummyModel'  => $namespacedModel,
-            '{{ namespacedModel }}' => $namespacedModel,
-            '{{namespacedModel}}'   => $namespacedModel,
-            'DummyModel'            => $model,
-            '{{ model }}'           => $model,
-            '{{model}}'             => $model,
-            'dummyModel'            => Str::camel($dummyModel),
-            '{{ modelVariable }}'   => Str::camel($dummyModel),
-            '{{modelVariable}}'     => Str::camel($dummyModel),
-            'DummyUser'             => $dummyUser,
-            '{{ user }}'            => $dummyUser,
-            '{{user}}'              => $dummyUser,
-            '$user'                 => '$' . Str::camel($dummyUser),
+            'NamespacedDummyModel'       => $namespacedModel,
+            '{{ namespacedModel }}'      => $namespacedModel,
+            '{{namespacedModel}}'        => $namespacedModel,
+            '{{ namespacedCollection }}' => $namespacedCollection,
+            '{{namespacedCollection}}'   => $namespacedCollection,
+            'DummyModel'                 => $model,
+            '{{ model }}'                => $model,
+            '{{model}}'                  => $model,
+            'dummyModel'                 => Str::camel($dummyModel),
+            '{{ modelVariable }}'        => Str::camel($dummyModel),
+            '{{modelVariable}}'          => Str::camel($dummyModel),
+            'DummyUser'                  => $dummyUser,
+            '{{ user }}'                 => $dummyUser,
+            '{{user}}'                   => $dummyUser,
+            '$user'                      => '$'.Str::camel($dummyUser),
         ];
 
         $stub = str_replace(
