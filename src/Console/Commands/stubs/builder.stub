@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Builder;
  * @method Model getModel()
  * @method Model make(array $attributes = [])
  * @method Model create(array $attributes = [])
- * @method Model forceCreate(array $attributes)
  * @method Model sole($columns = ['*'])
  * @method Model find($id, $columns = ['*'])
  * @method Model findOr($id, $columns = ['*'], Closure $callback = null)
@@ -22,10 +21,11 @@ use Illuminate\Database\Eloquent\Builder;
  * @method Model firstOrFail($columns = ['*'])
  * @method Model firstOrCreate(array $attributes = [], array $values = [])
  * @method Model firstWhere($column, $operator = null, $value = null, $boolean = 'and')
+ * @method Model forceCreate(array $attributes)
  * @method Model updateOrCreate(array $attributes, array $values = [])
  *
- * @method Collection findMany($ids, $columns = ['*'])
- * @method Collection get($columns = ['*'])
+ * @method Collection|Model[] findMany($ids, $columns = ['*'])
+ * @method Collection|Model[] get($columns = ['*'])
  */
 class {{ class }} extends Builder
 {
