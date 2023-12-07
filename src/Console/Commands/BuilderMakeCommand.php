@@ -4,6 +4,7 @@ namespace Codewiser\Make\Console\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -153,6 +154,10 @@ class BuilderMakeCommand extends GeneratorCommand
         $rootNamespace = $this->rootNamespace();
 
         if (Str::startsWith($collection, $rootNamespace)) {
+            return $collection;
+        }
+
+        if ($collection === Collection::class) {
             return $collection;
         }
 

@@ -2,6 +2,7 @@
 
 namespace {{ namespace }};
 
+use Closure;
 use {{ namespacedModel }} as Model;
 use {{ namespacedCollection }} as Collection;
 use Illuminate\Database\Eloquent\Builder;
