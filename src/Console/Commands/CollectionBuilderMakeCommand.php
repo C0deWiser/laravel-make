@@ -44,7 +44,7 @@ class CollectionBuilderMakeCommand extends Command
         $this->info('Modify your '.$model);
         $this->line('/**');
         $this->line(' * @method static '.$ns_builder.' query()');
-        $this->line(' * @method static '.$ns_collection.' all($columns = ['*'])');
+        $this->line(' * @method static '.$ns_collection.' all($columns = [\'*\'])');
         $this->line(' */');
         $this->line('class '.$model);
         $this->line('{');
