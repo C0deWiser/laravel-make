@@ -3,6 +3,7 @@
 namespace Codewiser\Make;
 
 use Codewiser\Make\Console\Commands\BuilderMakeCommand;
+use Codewiser\Make\Console\Commands\CollectionBuilderMakeCommand;
 use Codewiser\Make\Console\Commands\CollectionMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,6 +31,7 @@ class MakeServiceProvider extends ServiceProvider
             $commands = [
                 BuilderMakeCommand::class,
                 CollectionMakeCommand::class,
+                CollectionBuilderMakeCommand::class,
             ];
 
             $this->commands($commands);
