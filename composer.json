@@ -9,6 +9,7 @@
             "email": "pm@101media.ru"
         }
     ],
+    "abandoned": true,
     "require": {
         "php": "^8.0",
         "laravel/framework": ">=10.0"
